@@ -11,7 +11,9 @@ const colors = require('colors');
 const winston = require('winston');
 const expressWinston = require('express-winston');
 require('winston-mongodb');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./configs/connect.db');
+const routes = require('./routes');
 const port = process.env.PORT || 4000;
 const whitelist = ['http://localhost:3000'];
 const corsOptions = {
@@ -63,9 +65,11 @@ app.use(
         statusLevels: true,
     }),
 );
+app.use(cookieParser());
 app.use(helmet());
 app.use(cors(corsOptions));
 connectDB();
+routes(app);
 app.get('/', (req, res) => {
     return res.json({
         data: 'Hello',
